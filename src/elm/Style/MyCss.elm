@@ -1,4 +1,4 @@
-module MyCss exposing (..)
+module Style.MyCss exposing (..)
 
 import Css exposing (..)
 import Css.Elements exposing (body)

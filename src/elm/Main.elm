@@ -8,7 +8,7 @@ import Task
 import Json.Decode exposing (..)
 import Json.Decode.Pipeline exposing (decode, required, optional)
 import Html.CssHelpers
-import MyCss
+import Style.MyCss as MyCss
 
 
 { id, class, classList } =
