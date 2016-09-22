@@ -5,10 +5,9 @@ import Html.Attributes exposing (..)
 import Html.App as App
 import Http
 import Task
-import Json.Decode exposing (..)
-import Json.Decode.Pipeline exposing (decode, required, optional)
 import Html.CssHelpers
 import Style.MyCss as MyCss
+import Model.WeatherAPI exposing (..)
 
 
 { id, class, classList } =
@@ -21,23 +20,61 @@ type alias Weather =
     }
 
 
-weatherDecoder : Decoder Weather
-weatherDecoder =
-    decode Weather
-        |> Json.Decode.Pipeline.required "currentTemp" string
-        |> Json.Decode.Pipeline.required "desc" string
-        |> Json.Decode.Pipeline.required "high" string
-        |> Json.Decode.Pipeline.required "low" string
+getWeatherFromWeatherResponse : WeatherResponse -> Weather
+getWeatherFromWeatherResponse wr =
+    let
+        item =
+            wr.query.results.channel.item
+
+        ct =
+            item.condition.temp
+
+        fResp =
+            getForecastResponse (List.head item.forecast)
+    in
+        { currentTemp = ct
+        , desc = fResp.desc
+        , high = fResp.high
+        , low = fResp.low
+        }
+
+
+type alias ForecastResponse =
+    { desc : String
+    , high : String
+    , low : String
+    }
+
+
+emptyForecastResp : ForecastResponse
+emptyForecastResp =
+    { desc = initModel.desc
+    , high = initModel.high
+    , low = initModel.low
+    }
+
+
+getForecastResponse : Maybe Forecast -> ForecastResponse
+getForecastResponse f =
+    case f of
+        Nothing ->
+            emptyForecastResp
+
+        Just f ->
+            { desc = f.text
+            , high = f.high
+            , low = f.low
+            }
 
 
 getWeather : Cmd Msg
 getWeather =
     let
         url =
-            "http://localhost:9000/weather"
+            "https://query.yahooapis.com/v1/public/yql?q=select * from weather.forecast where u='f' AND woeid in (select woeid from geo.places(1) where text=\" minneapolis \")&format=json"
 
         task =
-            Http.get weatherDecoder url
+            Http.get weatherResponseDecoder url
 
         cmd =
             Task.perform Fail Forecast task
@@ -68,15 +105,15 @@ init =
 
 
 type Msg
-    = Forecast Weather
+    = Forecast WeatherResponse
     | Fail Http.Error
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        Forecast weather ->
-            ( weather, Cmd.none )
+        Forecast resp ->
+            ( getWeatherFromWeatherResponse resp, Cmd.none )
 
         Fail error ->
             ( initModel, Cmd.none )
