@@ -7,8 +7,12 @@ import Http
 import Task
 import Json.Decode exposing (..)
 import Json.Decode.Pipeline exposing (decode, required, optional)
+import Html.CssHelpers
+import MyCss
 
 
+{ id, class, classList } =
+    Html.CssHelpers.withNamespace "myweather"
 type alias Weather =
     { currentTemp : String
     , desc : String
@@ -80,14 +84,16 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div [ class "navbar navbar-inverse" ]
-        [ div [ class "container-fluid" ]
-            [ div [ class "navbar-header" ]
-                [ span [ class "navbar-brand" ] [ text ("Minneapolis " ++ model.currentTemp ++ " " ++ model.desc) ]
-                ]
-            , ul [ class "nav navbar-nav navbar-right" ]
-                [ li [] [ a [] [ text ("High: " ++ model.high) ] ]
-                , li [] [ a [] [ text ("Low: " ++ model.low) ] ]
+    div [ class [ MyCss.App ] ]
+        [ div [ Html.Attributes.class "navbar navbar-inverse" ]
+            [ div [ Html.Attributes.class "container-fluid" ]
+                [ div [ Html.Attributes.class "navbar-header" ]
+                    [ span [ Html.Attributes.class "navbar-brand" ] [ text ("Minneapolis " ++ model.currentTemp ++ " " ++ model.desc) ]
+                    ]
+                , ul [ Html.Attributes.class "nav navbar-nav navbar-right" ]
+                    [ li [] [ a [] [ text ("High: " ++ model.high) ] ]
+                    , li [] [ a [] [ text ("Low: " ++ model.low) ] ]
+                    ]
                 ]
             ]
         ]
