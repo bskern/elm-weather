@@ -20,3 +20,5 @@ todo
 * ~~think about gulp~~
 * ~~use webpack~~
 * remove local dependency so this can be standalone
+
+Layout/webpack based on [elm-webpack-starter](https://github.com/moarwick/elm-webpack-starter)
