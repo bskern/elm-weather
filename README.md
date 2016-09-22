@@ -10,7 +10,7 @@ Small example of my first elm 'app'
 
 Customizing Location
 ====================
-* edit url in Main.elm specifically the text query param 
+* edit url in Main.elm specifically the text query param
 
 Runing
 ======
@@ -26,3 +26,9 @@ todo
 * ~~remove local dependency so this can be standalone~~
 
 Layout/webpack based on [elm-webpack-starter](https://github.com/moarwick/elm-webpack-starter)
+
+
+What it looks like
+==================
+Nothing much but learned a lot putting this all together
+![Imgur](http://i.imgur.com/e6cgnsO.png)
